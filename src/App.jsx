@@ -20,7 +20,6 @@ export const App = () => {
   const [isSearch, setIsSearch] = useState(false);
   const [sort, setSort] = useState(false);
   const [cancel, setCancel] = useState(false);
-  const [notFound, setNotFound] = useState(false);
 
   const fetchToDos = async () => {
     setIsLoading(true);
@@ -186,7 +185,6 @@ export const App = () => {
                 fetchToDo={fetchToDo}
                 deleteToDo={deleteToDo}
                 error={error}
-                notFound={notFound}
               />
             }
           />
