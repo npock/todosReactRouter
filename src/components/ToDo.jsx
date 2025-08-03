@@ -71,6 +71,7 @@ export const Todo = () => {
     await deleteToDo(id);
     setIsDeleting(false);
     navigate("/");
+    navigate(0);
   };
 
   const handleEdit = () => {
@@ -79,6 +80,7 @@ export const Todo = () => {
 
   const onSave = () => {
     updateToDo(id, data).finally(() => handleEdit());
+    navigate(0);
   };
 
   const onChange = (e) => {
