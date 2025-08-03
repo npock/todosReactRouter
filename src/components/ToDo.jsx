@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-export const Todo = ({ updateToDo, deleteToDo, fetchToDo, todo, error }) => {
+export const Todo = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -9,6 +9,62 @@ export const Todo = ({ updateToDo, deleteToDo, fetchToDo, todo, error }) => {
   const [data, setData] = useState({
     title: "",
   });
+  const [todo, setTodo] = useState("");
+  const [error, setError] = useState(false);
+
+  const fetchToDo = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3000/TodoList/${id}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error("такого ToDo с таким id не найден");
+        }
+        throw new Error("Ошибка в запросе на сервер");
+      }
+      const dataTodo = await response.json();
+      setTodo(dataTodo);
+    } catch (error) {
+      setError(error.message);
+      setTodo(null);
+    }
+  };
+
+  const updateToDo = async (id, payload) => {
+    try {
+      const response = await fetch(`http://localhost:3000/TodoList/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify({
+          ...payload,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Ошибка в запросе на сервер");
+      }
+      const newTodo = await response.json();
+      //   setToDos((prevToDos) =>
+      //     prevToDos.map((todo) => (todo.id === newTodo.id ? newTodo : todo))
+      //   );
+      setTodo(newTodo);
+    } catch (error) {
+      setError(error);
+    }
+  };
+
+  const deleteToDo = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3000/TodoList/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+      });
+      if (!response.ok) {
+        throw new Error("Ошибка в запросе на сервер");
+      }
+      setTodo("");
+    } catch (error) {
+      setError(error);
+    }
+  };
 
   const onDelete = async () => {
     setIsDeleting(true);
@@ -37,7 +93,7 @@ export const Todo = ({ updateToDo, deleteToDo, fetchToDo, todo, error }) => {
   if (error) {
     return (
       <>
-        <p>Ошибка: {error}</p>;
+        <p>Ошибка: {error}</p>
       </>
     );
   }
