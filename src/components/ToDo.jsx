@@ -1,14 +1,10 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { SaveForm, ToDoUpdateDeleteForm } from "../components";
 
 export const Todo = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [data, setData] = useState({
-    title: "",
-  });
   const [todo, setTodo] = useState("");
   const [error, setError] = useState(false);
 
@@ -42,9 +38,6 @@ export const Todo = () => {
         throw new Error("Ошибка в запросе на сервер");
       }
       const newTodo = await response.json();
-      //   setToDos((prevToDos) =>
-      //     prevToDos.map((todo) => (todo.id === newTodo.id ? newTodo : todo))
-      //   );
       setTodo(newTodo);
     } catch (error) {
       setError(error);
@@ -66,26 +59,13 @@ export const Todo = () => {
     }
   };
 
-  const onDelete = async () => {
-    setIsDeleting(true);
-    await deleteToDo(id);
-    setIsDeleting(false);
-    navigate("/");
-    navigate(0);
-  };
-
   const handleEdit = () => {
     setIsEdit((prevState) => !prevState);
   };
 
-  const onSave = () => {
-    updateToDo(id, data).finally(() => handleEdit());
-    navigate(0);
-  };
-
   const onChange = (e) => {
     const { name, value } = e.target;
-    setData({ ...data, [name]: value });
+    setTodo({ [name]: value });
   };
 
   useEffect(() => {
@@ -103,40 +83,21 @@ export const Todo = () => {
     <>
       <div>
         {isEdit ? (
-          <div>
-            <input value={data.title} name="title" onChange={onChange} />
-            <button onClick={onSave}> save</button>
-            <button onClick={handleEdit}> cancel</button>
-          </div>
+          <SaveForm
+            title={todo.title}
+            onChange={onChange}
+            handleEdit={handleEdit}
+            updateToDo={updateToDo}
+            id={id}
+            todo={todo}
+          />
         ) : (
-          <div
-            style={{
-              marginBottom: "15px",
-              marginLeft: "50px",
-              display: "flex",
-            }}
-          >
-            {isDeleting ? (
-              <span>...deleting</span>
-            ) : (
-              <>
-                <button onClick={() => navigate("/")}>← Назад</button>
-                <li>{todo.title}</li>
-              </>
-            )}
-
-            <button onClick={handleEdit}>update</button>
-
-            <button
-              style={{
-                marginLeft: "10px",
-              }}
-              onClick={onDelete}
-              disabled={isDeleting}
-            >
-              delete
-            </button>
-          </div>
+          <ToDoUpdateDeleteForm
+            id={id}
+            title={todo.title}
+            handleEdit={handleEdit}
+            deleteToDo={deleteToDo}
+          />
         )}
       </div>
     </>

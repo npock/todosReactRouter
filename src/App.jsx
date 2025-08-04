@@ -15,9 +15,8 @@ export const App = () => {
         </li>
       </div>
       <Routes>
-        <Route path="/" element={<MainPage />}>
-          <Route path="todo/:id" element={<Todo />} />
-        </Route>
+        <Route path="/" element={<MainPage />} />
+        <Route path="todo/:id" element={<Todo />} />
         <Route path="/404" element={<NotFound />} />
         <Route path="*" element={<Navigate to="/404" replace />} />
       </Routes>
