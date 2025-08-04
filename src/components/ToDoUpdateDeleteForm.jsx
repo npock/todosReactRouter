@@ -9,7 +9,6 @@ export const ToDoUpdateDeleteForm = ({ id, title, handleEdit, deleteToDo }) => {
     await deleteToDo(id);
     setIsDeleting(false);
     navigate("/");
-    navigate(0);
   };
 
   const mainBack = () => {

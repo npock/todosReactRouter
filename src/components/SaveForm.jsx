@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-
 export const SaveForm = ({
   title,
   onChange,
@@ -8,11 +6,8 @@ export const SaveForm = ({
   id,
   todo,
 }) => {
-  const navigate = useNavigate();
-
   const onSave = () => {
     updateToDo(id, todo).finally(() => handleEdit());
-    navigate(0);
   };
 
   return (
